@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bernardo Paldes — Autonomous AI Systems & Tooling</title>
-  <meta name="description" content="Open-source agentic engineering sentinels, multi-model orchestrators, and AI assistant infrastructure.">
+  <title>Bernardo Paldes — Developer & Systems Engineer</title>
+  <meta name="description" content="Open-source tools, agentic doctrine, and connection infrastructure for AI coding assistants.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
@@ -16,23 +16,22 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
           },
           colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              400: '#818cf8',
-              500: '#6366f1',
-              600: '#4f46e5',
-            },
-            surface: {
-              950: '#07090e',
-              900: '#0c1017',
-              850: '#111723',
-              800: '#182030',
-              700: '#26334d',
+            app: {
+              bg: '#0d1117',
+              panel: '#161b22',
+              card: '#181e26',
+              border: '#30363d',
+              'border-subtle': '#21262d',
+              muted: '#8b949e',
+              text: '#c9d1d9',
+              bright: '#f0f6fc',
+              blue: '#58a6ff',
+              green: '#3fb950',
+              amber: '#d29922',
             }
           }
         }
@@ -41,243 +40,356 @@
   </script>
   <style>
     body {
-      background-color: #07090e;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
-      background-attachment: fixed;
+      background-color: #0d1117;
+      color: #c9d1d9;
     }
-    .glass-card {
-      background: linear-gradient(135deg, rgba(17, 23, 35, 0.75) 0%, rgba(12, 16, 23, 0.85) 100%);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+    .code-preview {
+      background-color: #090d12;
+      border: 1px solid #21262d;
     }
-    .glass-card:hover {
-      border-color: rgba(99, 102, 241, 0.35);
-      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
-    }
-    .glow-badge {
-      box-shadow: 0 0 15px -3px rgba(99, 102, 241, 0.4);
+    .lang-active {
+      background-color: #30363d;
+      color: #f0f6fc;
+      font-weight: 600;
     }
   </style>
 </head>
-<body class="text-slate-200 antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200">
+<body class="min-h-screen flex flex-col justify-between selection:bg-slate-700 selection:text-white">
 
-  <!-- Navigation -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-surface-950/80 border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 p-[1px] flex items-center justify-center">
-          <div class="w-full h-full bg-surface-950 rounded-[11px] flex items-center justify-center">
-            <span class="font-mono font-bold text-sm bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">BP</span>
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 bg-[#0d1117]/90 backdrop-blur-md border-b border-app-border-subtle">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="#" class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded bg-app-panel border border-app-border flex items-center justify-center font-mono font-bold text-xs text-app-blue">
+            BP
           </div>
-        </div>
-        <span class="font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors">Bernardo Paldes</span>
-      </a>
+          <span class="font-semibold text-app-bright tracking-tight text-sm">Bernardo Paldes</span>
+        </a>
+        <span class="hidden sm:inline-block text-xs font-mono text-app-muted border-l border-app-border pl-3">
+          oss-developer
+        </span>
+      </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <!-- Language Switcher (Segmented Control) -->
+        <div class="inline-flex items-center rounded-md bg-app-panel border border-app-border p-0.5 font-mono text-xs text-app-muted" role="group" aria-label="Language Selector">
+          <button type="button" id="lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded text-xs transition-colors lang-active" aria-pressed="true">
+            EN
+          </button>
+          <button type="button" id="lang-pt" onclick="setLanguage('pt')" class="px-2.5 py-1 rounded text-xs transition-colors hover:text-app-bright" aria-pressed="false">
+            PT-BR
+          </button>
+        </div>
+
         <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" 
-           class="flex items-center gap-2 text-sm text-slate-400 hover:text-white px-3.5 py-1.5 rounded-lg border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all">
-          <i data-lucide="github" class="w-4 h-4"></i>
-          <span>GitHub</span>
+           class="flex items-center gap-2 text-xs font-mono text-app-muted hover:text-app-bright px-3 py-1.5 rounded-md border border-app-border bg-app-panel hover:bg-app-border/40 transition-colors">
+          <i data-lucide="github" class="w-3.5 h-3.5"></i>
+          <span>github.com/bepaldes</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <main class="max-w-6xl mx-auto px-6 py-16 sm:py-24 flex-1">
-    <div class="max-w-3xl">
-      <!-- Status Pill -->
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 mb-6 glow-badge">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Autonomous AI Agents &amp; Engineering Tooling
+  <!-- Main Content Container -->
+  <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 flex-1 w-full">
+    
+    <!-- Hero / Profile Intro -->
+    <section class="border-b border-app-border-subtle pb-12">
+      <div class="flex items-center gap-2 text-xs font-mono text-app-green mb-3">
+        <span class="w-2 h-2 rounded-full bg-app-green"></span>
+        <span data-i18n="hero-tag">OPEN SOURCE &bull; AGENT SYSTEMS &bull; RUNTIMES</span>
       </div>
 
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-        Building the nervous system for <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent">AI Coding Assistants</span>.
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-app-bright max-w-2xl leading-snug">
+        <span data-i18n="hero-title">Deterministic sentinels, execution doctrine, and bridges for AI coding assistants.</span>
       </h1>
 
-      <p class="mt-6 text-lg sm:text-xl text-slate-400 leading-relaxed">
-        Curated agentic sentinels, universal cross-harness doctrine, and connection infrastructure synchronizing Google Antigravity, Claude Code, OpenAI Codex CLI, and beyond.
+      <p class="mt-4 text-base text-app-muted max-w-2xl leading-relaxed" data-i18n="hero-desc">
+        Author of multi-agent synchronization frameworks and connectivity hubs. Built to enforce consistent engineering guardrails and connection health across terminal and desktop LLM runtimes.
       </p>
 
-      <div class="mt-8 flex flex-wrap items-center gap-4">
-        <a href="#projects" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
-          <span>Explore Repositories</span>
-          <i data-lucide="arrow-down" class="w-4 h-4"></i>
-        </a>
-        <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl border border-white/10 hover:border-slate-600 hover:bg-white/5 text-slate-300 hover:text-white font-medium text-sm flex items-center gap-2 transition-all">
-          <i data-lucide="external-link" class="w-4 h-4"></i>
-          <span>GitHub Profile</span>
-        </a>
+      <!-- Supported Environments -->
+      <div class="mt-8 pt-6 border-t border-app-border-subtle flex flex-wrap items-center gap-y-2 gap-x-4">
+        <span class="text-xs font-mono uppercase tracking-wider text-app-muted" data-i18n="env-label">Target Harnesses:</span>
+        <div class="flex flex-wrap gap-1.5 text-xs font-mono text-app-muted">
+          <span class="px-2 py-0.5 rounded bg-app-panel border border-app-border text-slate-300">Google Antigravity</span>
+          <span class="px-2 py-0.5 rounded bg-app-panel border border-app-border text-slate-300">Claude Code</span>
+          <span class="px-2 py-0.5 rounded bg-app-panel border border-app-border text-slate-300">OpenAI Codex CLI</span>
+          <span class="px-2 py-0.5 rounded bg-app-panel border border-app-border text-slate-300">Claude Desktop</span>
+          <span class="px-2 py-0.5 rounded bg-app-panel border border-app-border text-slate-300">Hermes Agent</span>
+          <span class="px-2 py-0.5 rounded bg-app-panel border border-app-border text-slate-300">OpenClaw</span>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Supported Ecosystem Badges -->
-    <div class="mt-16 pt-8 border-t border-white/5">
-      <p class="text-xs uppercase tracking-wider font-mono text-slate-500 mb-4">Unified Across Runtimes</p>
-      <div class="flex flex-wrap gap-2.5">
-        <span class="px-3 py-1 rounded-lg text-xs font-mono bg-surface-850 border border-white/5 text-slate-300">Google Antigravity</span>
-        <span class="px-3 py-1 rounded-lg text-xs font-mono bg-surface-850 border border-white/5 text-slate-300">Claude Code</span>
-        <span class="px-3 py-1 rounded-lg text-xs font-mono bg-surface-850 border border-white/5 text-slate-300">OpenAI Codex CLI</span>
-        <span class="px-3 py-1 rounded-lg text-xs font-mono bg-surface-850 border border-white/5 text-slate-300">Claude Desktop</span>
-        <span class="px-3 py-1 rounded-lg text-xs font-mono bg-surface-850 border border-white/5 text-slate-300">Hermes Agent</span>
-        <span class="px-3 py-1 rounded-lg text-xs font-mono bg-surface-850 border border-white/5 text-slate-300">OpenClaw</span>
-      </div>
-    </div>
-
-    <!-- Projects Grid -->
-    <section id="projects" class="mt-20">
-      <div class="flex items-end justify-between mb-8">
+    <!-- Public Projects Section -->
+    <section class="mt-12">
+      <div class="flex items-baseline justify-between mb-6">
         <div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Public Repositories</h2>
-          <p class="text-sm text-slate-400 mt-1">Open-source tools designed for deterministic agent orchestration and connectivity.</p>
+          <h2 class="text-lg font-bold text-app-bright font-mono uppercase tracking-wide" data-i18n="projects-heading">
+            Featured Projects
+          </h2>
+          <p class="text-xs text-app-muted mt-0.5" data-i18n="projects-subheading">
+            Actively maintained public repositories.
+          </p>
         </div>
+        <span class="text-xs font-mono text-app-muted">2 Repositories</span>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Project Cards Layout -->
+      <div class="space-y-6">
 
-        <!-- Card 1: Heimdall Agent -->
-        <div class="glass-card rounded-2xl p-7 flex flex-col justify-between transition-all group">
-          <div>
-            <div class="flex items-center justify-between gap-4 mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-                  <i data-lucide="shield-check" class="w-5 h-5"></i>
-                </div>
-                <div>
-                  <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors flex items-center gap-2">
-                    heimdall-agent
-                  </h3>
-                  <p class="text-xs font-mono text-slate-500">Autonomous Multi-Agent Sentinel</p>
-                </div>
+        <!-- Project 1: Heimdall Agent -->
+        <article class="bg-app-panel border border-app-border rounded-lg p-6 sm:p-7 hover:border-slate-500 transition-colors">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-app-border-subtle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#0d1117] border border-app-border flex items-center justify-center text-app-blue">
+                <i data-lucide="shield" class="w-4 h-4"></i>
               </div>
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">v1.0.0</span>
+              <div>
+                <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer" 
+                   class="text-lg font-bold text-app-bright hover:text-app-blue transition-colors font-mono flex items-center gap-2">
+                  bepaldes/heimdall-agent
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 text-app-muted"></i>
+                </a>
+              </div>
             </div>
 
-            <p class="text-slate-300 text-sm leading-relaxed mb-5">
-              Autonomous multi-agent engineering sentinel &amp; bootstrapper. Synchronizes specialized agent personas, curated skills, and universal doctrine across Antigravity, Claude Code, and Codex CLI.
-            </p>
-
-            <!-- Features -->
-            <ul class="space-y-2 mb-6 text-xs text-slate-400">
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                <span><strong>Cross-Agent Doctrine:</strong> Strict 3-tier instruction standards and non-negotiable safety guardrails.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                <span><strong>Skill &amp; Persona Sync:</strong> Unifies skills, playbooks, and specialized personas across all local harnesses.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                <span><strong>Zero Subagent Sprawl:</strong> Progressive disclosure over reckless subagent fan-out.</span>
-              </li>
-            </ul>
-
-            <!-- Command Snippet -->
-            <div class="bg-surface-950/90 rounded-xl p-3 border border-white/5 font-mono text-xs flex items-center justify-between gap-2 mb-6 text-slate-300">
-              <span class="truncate text-indigo-300">$ git clone https://github.com/bepaldes/heimdall-agent.git</span>
-              <button onclick="copyCommand('git clone https://github.com/bepaldes/heimdall-agent.git', this)" 
-                      title="Copy command" 
-                      class="text-slate-400 hover:text-white p-1 rounded hover:bg-white/5 transition-colors">
-                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-              </button>
+            <div class="flex items-center gap-2 font-mono text-xs">
+              <span class="px-2 py-0.5 rounded bg-[#0d1117] border border-app-border text-app-blue">v1.0.0</span>
+              <span class="px-2 py-0.5 rounded bg-[#0d1117] border border-app-border text-slate-400">Node.js / ESM</span>
+              <span class="px-2 py-0.5 rounded bg-[#0d1117] border border-app-border text-app-green">MIT</span>
             </div>
           </div>
 
-          <div class="flex items-center gap-3 pt-4 border-t border-white/5">
-            <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer"
-               class="flex-1 text-center py-2 px-4 rounded-xl bg-indigo-600/90 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2">
-              <i data-lucide="github" class="w-3.5 h-3.5"></i>
-              <span>View Repository</span>
+          <p class="mt-4 text-sm text-slate-300 leading-relaxed" data-i18n="heimdall-desc">
+            Autonomous multi-agent engineering sentinel &amp; bootstrapper. Synchronizes specialized agent personas, curated skills, and universal doctrine across Google Antigravity, Claude Code, and OpenAI Codex CLI.
+          </p>
+
+          <!-- Key Technical Specs / Checklist -->
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono text-app-muted">
+            <div class="bg-[#0d1117] p-3 rounded border border-app-border-subtle">
+              <span class="text-slate-200 block font-semibold mb-1" data-i18n="heimdall-f1-title">&bull; 3-Tier Instruction Model</span>
+              <span data-i18n="heimdall-f1-desc">Persona, chronological lifecycle, and explicit negative constraints.</span>
+            </div>
+            <div class="bg-[#0d1117] p-3 rounded border border-app-border-subtle">
+              <span class="text-slate-200 block font-semibold mb-1" data-i18n="heimdall-f2-title">&bull; Cross-Agent Parity</span>
+              <span data-i18n="heimdall-f2-desc">Synchronizes playbooks and skills across AGY, Claude Code, and Codex.</span>
+            </div>
+            <div class="bg-[#0d1117] p-3 rounded border border-app-border-subtle">
+              <span class="text-slate-200 block font-semibold mb-1" data-i18n="heimdall-f3-title">&bull; Karpathy Restraint</span>
+              <span data-i18n="heimdall-f3-desc">Surgical edits, minimal blast radius, and anti-subagent sprawl policy.</span>
+            </div>
+          </div>
+
+          <!-- Quick Terminal Command -->
+          <div class="mt-5 flex items-center justify-between code-preview rounded px-3.5 py-2.5 font-mono text-xs">
+            <div class="flex items-center gap-2 overflow-x-auto text-slate-300">
+              <span class="text-app-muted select-none">$</span>
+              <span class="select-all">git clone https://github.com/bepaldes/heimdall-agent.git</span>
+            </div>
+            <button onclick="copyCommand('git clone https://github.com/bepaldes/heimdall-agent.git', this)" 
+                    class="ml-3 text-app-muted hover:text-app-bright p-1 rounded hover:bg-app-border transition-colors shrink-0" 
+                    title="Copy command">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between text-xs font-mono text-app-muted">
+            <span data-i18n="heimdall-quick">Zero global installation needed &bull; Run with native Node.js &gt;= 18</span>
+            <a href="https://github.com/bepaldes/heimdall-agent#readme" target="_blank" rel="noopener noreferrer" 
+               class="text-app-blue hover:underline flex items-center gap-1">
+              <span data-i18n="read-docs">Read Docs</span> &rarr;
             </a>
           </div>
-        </div>
+        </article>
 
-        <!-- Card 2: GC-Helper -->
-        <div class="glass-card rounded-2xl p-7 flex flex-col justify-between transition-all group">
-          <div>
-            <div class="flex items-center justify-between gap-4 mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-                  <i data-lucide="network" class="w-5 h-5"></i>
-                </div>
-                <div>
-                  <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2">
-                    gc-helper
-                  </h3>
-                  <p class="text-xs font-mono text-slate-500">Connection Auditor &amp; Hub</p>
-                </div>
+        <!-- Project 2: GC-Helper -->
+        <article class="bg-app-panel border border-app-border rounded-lg p-6 sm:p-7 hover:border-slate-500 transition-colors">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-app-border-subtle">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#0d1117] border border-app-border flex items-center justify-center text-app-green">
+                <i data-lucide="radio" class="w-4 h-4"></i>
               </div>
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Zero-Dep</span>
+              <div>
+                <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer" 
+                   class="text-lg font-bold text-app-bright hover:text-app-green transition-colors font-mono flex items-center gap-2">
+                  bepaldes/gc-helper
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 text-app-muted"></i>
+                </a>
+              </div>
             </div>
 
-            <p class="text-slate-300 text-sm leading-relaxed mb-5">
-              Zero-dependency auto-configurator, connection auditor, and status management hub for AI coding assistants connecting to GhostCLI and local LLM backends.
-            </p>
-
-            <!-- Features -->
-            <ul class="space-y-2 mb-6 text-xs text-slate-400">
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
-                <span><strong>Multi-Harness Detection:</strong> Inspects Claude Code, Codex, Hermes, OpenClaw, and VS Code configs.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
-                <span><strong>Connection Auditing:</strong> Live verification of backend endpoints, token states, and socket health.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
-                <span><strong>Pure Zero Dependencies:</strong> Native ESM JavaScript with zero external node package bloat.</span>
-              </li>
-            </ul>
-
-            <!-- Command Snippet -->
-            <div class="bg-surface-950/90 rounded-xl p-3 border border-white/5 font-mono text-xs flex items-center justify-between gap-2 mb-6 text-slate-300">
-              <span class="truncate text-cyan-300">$ git clone https://github.com/bepaldes/gc-helper.git</span>
-              <button onclick="copyCommand('git clone https://github.com/bepaldes/gc-helper.git', this)" 
-                      title="Copy command" 
-                      class="text-slate-400 hover:text-white p-1 rounded hover:bg-white/5 transition-colors">
-                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-              </button>
+            <div class="flex items-center gap-2 font-mono text-xs">
+              <span class="px-2 py-0.5 rounded bg-[#0d1117] border border-app-border text-app-green">v1.0.0</span>
+              <span class="px-2 py-0.5 rounded bg-[#0d1117] border border-app-border text-slate-400">Zero-Dep ESM</span>
+              <span class="px-2 py-0.5 rounded bg-[#0d1117] border border-app-border text-app-green">MIT</span>
             </div>
           </div>
 
-          <div class="flex items-center gap-3 pt-4 border-t border-white/5">
-            <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer"
-               class="flex-1 text-center py-2 px-4 rounded-xl bg-cyan-600/90 hover:bg-cyan-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2">
-              <i data-lucide="github" class="w-3.5 h-3.5"></i>
-              <span>View Repository</span>
+          <p class="mt-4 text-sm text-slate-300 leading-relaxed" data-i18n="gc-desc">
+            Zero-dependency auto-configurator, connection auditor, and status management hub for AI coding assistants connecting to GhostCLI and local LLM endpoints.
+          </p>
+
+          <!-- Key Technical Specs / Checklist -->
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono text-app-muted">
+            <div class="bg-[#0d1117] p-3 rounded border border-app-border-subtle">
+              <span class="text-slate-200 block font-semibold mb-1" data-i18n="gc-f1-title">&bull; Auto-Detection</span>
+              <span data-i18n="gc-f1-desc">Scans Claude Code, Codex, Hermes, OpenClaw, and VS Code configs.</span>
+            </div>
+            <div class="bg-[#0d1117] p-3 rounded border border-app-border-subtle">
+              <span class="text-slate-200 block font-semibold mb-1" data-i18n="gc-f2-title">&bull; Live Audit Engine</span>
+              <span data-i18n="gc-f2-desc">Validates proxy routing, model reachability, and token integrity.</span>
+            </div>
+            <div class="bg-[#0d1117] p-3 rounded border border-app-border-subtle">
+              <span class="text-slate-200 block font-semibold mb-1" data-i18n="gc-f3-title">&bull; Zero Dependencies</span>
+              <span data-i18n="gc-f3-desc">Pure standard library implementation with zero external npm bloat.</span>
+            </div>
+          </div>
+
+          <!-- Quick Terminal Command -->
+          <div class="mt-5 flex items-center justify-between code-preview rounded px-3.5 py-2.5 font-mono text-xs">
+            <div class="flex items-center gap-2 overflow-x-auto text-slate-300">
+              <span class="text-app-muted select-none">$</span>
+              <span class="select-all">git clone https://github.com/bepaldes/gc-helper.git</span>
+            </div>
+            <button onclick="copyCommand('git clone https://github.com/bepaldes/gc-helper.git', this)" 
+                    class="ml-3 text-app-muted hover:text-app-bright p-1 rounded hover:bg-app-border transition-colors shrink-0" 
+                    title="Copy command">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between text-xs font-mono text-app-muted">
+            <span data-i18n="gc-quick">Instant runtime check &bull; Pure Node.js &gt;= 18</span>
+            <a href="https://github.com/bepaldes/gc-helper#readme" target="_blank" rel="noopener noreferrer" 
+               class="text-app-green hover:underline flex items-center gap-1">
+              <span data-i18n="read-docs">Read Docs</span> &rarr;
             </a>
           </div>
-        </div>
+        </article>
 
       </div>
     </section>
+
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-white/5 py-8 mt-12 bg-surface-950/60">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-mono">
+  <!-- Clean Minimalist Footer -->
+  <footer class="border-t border-app-border-subtle py-8 bg-[#090d12]">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-app-muted">
       <div>
-        &copy; <span id="year">2026</span> Bernardo Paldes. Open source under MIT license.
+        &copy; <span id="year">2026</span> Bernardo Paldes &bull; MIT License
       </div>
-      <div class="flex items-center gap-6">
-        <a href="https://github.com/bepaldes/heimdall-agent" class="hover:text-slate-300 transition-colors">heimdall-agent</a>
-        <a href="https://github.com/bepaldes/gc-helper" class="hover:text-slate-300 transition-colors">gc-helper</a>
-        <a href="https://github.com/bepaldes" class="hover:text-slate-300 transition-colors">github.com/bepaldes</a>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" class="hover:text-app-bright transition-colors">GitHub Profile</a>
+        <span>&bull;</span>
+        <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer" class="hover:text-app-bright transition-colors">heimdall-agent</a>
+        <span>&bull;</span>
+        <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer" class="hover:text-app-bright transition-colors">gc-helper</a>
       </div>
     </div>
   </footer>
 
+  <!-- Internationalization & Copy Scripts -->
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
-
-    // Current Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const translations = {
+      en: {
+        "hero-tag": "OPEN SOURCE • AGENT SYSTEMS • RUNTIMES",
+        "hero-title": "Deterministic sentinels, execution doctrine, and bridges for AI coding assistants.",
+        "hero-desc": "Author of multi-agent synchronization frameworks and connectivity hubs. Built to enforce consistent engineering guardrails and connection health across terminal and desktop LLM runtimes.",
+        "env-label": "Target Harnesses:",
+        "projects-heading": "Featured Projects",
+        "projects-subheading": "Actively maintained public repositories.",
+        "heimdall-desc": "Autonomous multi-agent engineering sentinel & bootstrapper. Synchronizes specialized agent personas, curated skills, and universal doctrine across Google Antigravity, Claude Code, and OpenAI Codex CLI.",
+        "heimdall-f1-title": "• 3-Tier Instruction Model",
+        "heimdall-f1-desc": "Persona, chronological lifecycle, and explicit negative constraints.",
+        "heimdall-f2-title": "• Cross-Agent Parity",
+        "heimdall-f2-desc": "Synchronizes playbooks and skills across AGY, Claude Code, and Codex.",
+        "heimdall-f3-title": "• Karpathy Restraint",
+        "heimdall-f3-desc": "Surgical edits, minimal blast radius, and anti-subagent sprawl policy.",
+        "heimdall-quick": "Zero global installation needed • Run with native Node.js >= 18",
+        "gc-desc": "Zero-dependency auto-configurator, connection auditor, and status management hub for AI coding assistants connecting to GhostCLI and local LLM endpoints.",
+        "gc-f1-title": "• Auto-Detection",
+        "gc-f1-desc": "Scans Claude Code, Codex, Hermes, OpenClaw, and VS Code configs.",
+        "gc-f2-title": "• Live Audit Engine",
+        "gc-f2-desc": "Validates proxy routing, model reachability, and token integrity.",
+        "gc-f3-title": "• Zero Dependencies",
+        "gc-f3-desc": "Pure standard library implementation with zero external npm bloat.",
+        "gc-quick": "Instant runtime check • Pure Node.js >= 18",
+        "read-docs": "Read Docs"
+      },
+      pt: {
+        "hero-tag": "CÓDIGO ABERTO • SISTEMAS DE AGENTES • RUNTIMES",
+        "hero-title": "Sentinelas determinísticos, doutrina de execução e pontes para assistentes de código com IA.",
+        "hero-desc": "Desenvolvedor de frameworks de sincronização multi-agente e hubs de conectividade. Projetados para assegurar diretrizes de engenharia e integridade de conexão em ambientes de LLM locais e terminais.",
+        "env-label": "Ambientes Suportados:",
+        "projects-heading": "Projetos em Destaque",
+        "projects-subheading": "Repositórios públicos mantidos ativamente.",
+        "heimdall-desc": "Sentinela de engenharia multi-agente e inicializador autônomo. Sincroniza personas de agentes especializados, habilidades curadas e doutrina universal entre Google Antigravity, Claude Code e OpenAI Codex CLI.",
+        "heimdall-f1-title": "• Modelo de Instrução em 3 Níveis",
+        "heimdall-f1-desc": "Persona, ciclo de vida cronológico e restrições negativas explícitas.",
+        "heimdall-f2-title": "• Paridade Multi-Agente",
+        "heimdall-f2-desc": "Sincroniza playbooks e habilidades entre AGY, Claude Code e Codex.",
+        "heimdall-f3-title": "• Simplicidade Karpathy",
+        "heimdall-f3-desc": "Edições cirúrgicas, raio de impacto mínimo e contenção de subagentes.",
+        "heimdall-quick": "Sem instalação global necessária • Execute com Node.js >= 18 nativo",
+        "gc-desc": "Configurador automático sem dependências externas, auditor de conexão e hub de gerenciamento de status para assistentes de IA conectados ao GhostCLI e endpoints locais.",
+        "gc-f1-title": "• Detecção Automática",
+        "gc-f1-desc": "Inspeciona configurações de Claude Code, Codex, Hermes, OpenClaw e VS Code.",
+        "gc-f2-title": "• Motor de Auditoria em Tempo Real",
+        "gc-f2-desc": "Valida roteamento de proxy, acessibilidade de modelos e integridade de tokens.",
+        "gc-f3-title": "• Zero Dependências",
+        "gc-f3-desc": "Implementação pura na biblioteca padrão, sem inchaço de pacotes npm.",
+        "gc-quick": "Verificação instantânea em execução • Node.js >= 18 puro",
+        "read-docs": "Ver Documentação"
+      }
+    };
+
+    function setLanguage(lang) {
+      const selected = translations[lang] ? lang : 'en';
+      document.documentElement.setAttribute('lang', selected === 'pt' ? 'pt-BR' : 'en');
+      
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[selected][key]) {
+          el.innerHTML = translations[selected][key];
+        }
+      });
+
+      // Update switcher buttons UI
+      const btnEn = document.getElementById('lang-en');
+      const btnPt = document.getElementById('lang-pt');
+
+      if (selected === 'en') {
+        btnEn.classList.add('lang-active');
+        btnEn.setAttribute('aria-pressed', 'true');
+        btnPt.classList.remove('lang-active');
+        btnPt.setAttribute('aria-pressed', 'false');
+      } else {
+        btnPt.classList.add('lang-active');
+        btnPt.setAttribute('aria-pressed', 'true');
+        btnEn.classList.remove('lang-active');
+        btnEn.setAttribute('aria-pressed', 'false');
+      }
+
+      localStorage.setItem('preferred_lang', selected);
+    }
+
+    // Auto-detect on load: stored preference -> URL param -> browser language
+    (function initLang() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLang = urlParams.get('lang');
+      const storedLang = localStorage.getItem('preferred_lang');
+      const browserLang = (navigator.language || '').toLowerCase().startsWith('pt') ? 'pt' : 'en';
+
+      const initialLang = urlLang || storedLang || browserLang || 'en';
+      setLanguage(initialLang === 'pt' ? 'pt' : 'en');
+    })();
 
     // Copy to clipboard helper
     function copyCommand(text, button) {
