@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bernardo Paldes — Open-Source Developer Tools</title>
+  <meta name="description" content="Open-source tools to make developer workflows smoother by Bernardo Paldes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            dark: {
+              bg: '#05070c',
+              surface: '#0b101b',
+              card: '#0f1728',
+              border: '#1c2638',
+              cmd: '#030509',
+            },
+            light: {
+              bg: '#f8fafc',
+              surface: '#ffffff',
+              card: '#ffffff',
+              border: '#e2e8f0',
+              cmd: '#f1f5f9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Theme transitions */
+    html {
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Ambient Hero Graphic & Grid */
+    .hero-grid-dark {
+      background-color: #05070c;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(37, 99, 235, 0.18) 0%, rgba(14, 165, 233, 0.05) 50%, transparent 75%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+
+    .hero-grid-light {
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(37, 99, 235, 0.1) 0%, rgba(14, 165, 233, 0.03) 50%, transparent 75%),
+        linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+
+    /* 3D Perspective Stage */
+    .perspective-stage {
+      perspective: 1200px;
+      perspective-origin: center center;
+    }
+
+    /* Scene Transitions */
+    .scene-card {
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+    }
+
+    /* Floating elevation shadows */
+    .stage-shadow-dark {
+      box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+    .stage-shadow-light {
+      box-shadow: 0 30px 80px -15px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Background Halos per tool */
+    .halo-blue-dark {
+      background: radial-gradient(circle at 50% 45%, rgba(37, 99, 235, 0.28) 0%, rgba(59, 130, 246, 0.1) 45%, transparent 75%);
+    }
+    .halo-blue-light {
+      background: radial-gradient(circle at 50% 45%, rgba(37, 99, 235, 0.14) 0%, rgba(59, 130, 246, 0.04) 45%, transparent 75%);
+    }
+
+    .halo-emerald-dark {
+      background: radial-gradient(circle at 50% 45%, rgba(16, 185, 129, 0.28) 0%, rgba(52, 211, 153, 0.1) 45%, transparent 75%);
+    }
+    .halo-emerald-light {
+      background: radial-gradient(circle at 50% 45%, rgba(16, 185, 129, 0.14) 0%, rgba(52, 211, 153, 0.04) 45%, transparent 75%);
+    }
+
+    .halo-amber-dark {
+      background: radial-gradient(circle at 50% 45%, rgba(245, 158, 11, 0.28) 0%, rgba(251, 191, 36, 0.1) 45%, transparent 75%);
+    }
+    .halo-amber-light {
+      background: radial-gradient(circle at 50% 45%, rgba(245, 158, 11, 0.14) 0%, rgba(251, 191, 36, 0.04) 45%, transparent 75%);
+    }
+
+    /* Tool-specific Card Accent Glows */
+    .border-glow-blue {
+      border-color: rgba(59, 130, 246, 0.35);
+      box-shadow: 0 0 40px -10px rgba(37, 99, 235, 0.25);
+    }
+    .border-glow-emerald {
+      border-color: rgba(16, 185, 129, 0.35);
+      box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.25);
+    }
+    .border-glow-amber {
+      border-color: rgba(245, 158, 11, 0.35);
+      box-shadow: 0 0 40px -10px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Scroller HUD */
+    .scrub-track {
+      background: rgba(148, 163, 184, 0.2);
+    }
+    .scrub-fill {
+      transition: height 0.1s linear, background-color 0.3s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-light-bg dark:bg-dark-bg text-slate-800 dark:text-slate-100 selection:bg-blue-600 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- Top Navigation                                                            -->
+  <!-- ========================================================================= -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-dark-bg/85 backdrop-blur-lg border-b border-light-border dark:border-dark-border transition-colors">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center font-bold text-xs text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
+          BP
+        </div>
+        <div>
+          <div class="font-bold text-sm tracking-tight text-slate-900 dark:text-white leading-none">Bernardo Paldes</div>
+          <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-1" data-i18n="nav-sub">Open Source Tools</div>
+        </div>
+      </a>
+
+      <!-- Quick Jump Menu with Colored Indicator Dots -->
+      <nav class="hidden md:flex items-center gap-1 text-xs font-mono">
+        <button onclick="scrollToScene(1)" id="nav-tool-1" class="px-3 py-1.5 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <span>heimdall-agent</span>
+        </button>
+        <button onclick="scrollToScene(2)" id="nav-tool-2" class="px-3 py-1.5 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>gc-helper</span>
+        </button>
+        <button onclick="scrollToScene(3)" id="nav-tool-3" class="px-3 py-1.5 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span>linkedin-agentic</span>
+        </button>
+      </nav>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button type="button" id="theme-toggle" onclick="toggleTheme()" 
+                class="p-2 rounded-lg border border-light-border dark:border-dark-border bg-white dark:bg-dark-surface text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+                title="Toggle Theme">
+          <i id="theme-icon-sun" data-lucide="sun" class="w-4 h-4 hidden"></i>
+          <i id="theme-icon-moon" data-lucide="moon" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Language Switcher -->
+        <div class="inline-flex rounded-lg bg-slate-100 dark:bg-dark-surface border border-light-border dark:border-dark-border p-0.5 text-xs font-mono">
+          <button type="button" id="lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-md font-semibold text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-sm transition-all">
+            EN
+          </button>
+          <button type="button" id="lang-pt" onclick="setLanguage('pt')" class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+            PT-BR
+          </button>
+        </div>
+
+        <!-- GitHub -->
+        <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg border border-light-border dark:border-dark-border bg-white dark:bg-dark-surface transition-colors">
+          <i data-lucide="github" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- Hero Section with Architectural Horizon Illustration                      -->
+  <!-- ========================================================================= -->
+  <section id="hero" class="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 pt-24 pb-16 overflow-hidden hero-grid-dark transition-colors">
+    
+    <!-- Hero Blueprint Background -->
+    <div class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-80 dark:opacity-70">
+      <svg class="w-[1280px] h-[720px] max-w-none text-blue-500/15 dark:text-blue-400/20" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3">
+          <line x1="640" y1="280" x2="0" y2="720" />
+          <line x1="640" y1="280" x2="160" y2="720" />
+          <line x1="640" y1="280" x2="320" y2="720" />
+          <line x1="640" y1="280" x2="480" y2="720" />
+          <line x1="640" y1="280" x2="800" y2="720" />
+          <line x1="640" y1="280" x2="960" y2="720" />
+          <line x1="640" y1="280" x2="1120" y2="720" />
+          <line x1="640" y1="280" x2="1280" y2="720" />
+        </g>
+        <g stroke="currentColor" stroke-width="1.5">
+          <ellipse cx="640" cy="480" rx="520" ry="140" class="text-blue-500/25 dark:text-blue-400/30" />
+          <ellipse cx="640" cy="540" rx="600" ry="160" class="text-blue-500/15 dark:text-blue-400/20" />
+          <ellipse cx="640" cy="620" rx="680" ry="180" class="text-cyan-500/15 dark:text-cyan-400/20" />
+        </g>
+        <g class="fill-blue-600 dark:fill-blue-400">
+          <circle cx="640" cy="280" r="4" />
+          <circle cx="480" cy="420" r="3" />
+          <circle cx="800" cy="420" r="3" />
+          <circle cx="320" cy="520" r="3.5" />
+          <circle cx="960" cy="520" r="3.5" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Soft Center Glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[360px] bg-gradient-to-b from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-light-bg dark:from-dark-bg to-transparent pointer-events-none"></div>
+
+    <!-- Hero Content -->
+    <div class="relative max-w-4xl space-y-6 z-10">
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08]">
+        <span data-i18n="hero-title">Open-source tools to make developer workflows smoother.</span>
+      </h1>
+
+      <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-sans" data-i18n="hero-desc">
+        Fast, open-source CLI utilities and agent workflows for AI coding assistants, environment setup, and developer automation.
+      </p>
+
+      <div class="pt-8 flex flex-col items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 select-none">
+        <span data-i18n="scroll-prompt">Scroll down to see what each tool does</span>
+        <i data-lucide="chevron-down" class="w-4 h-4 animate-bounce text-blue-500"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- Scrollytelling Stage with Dynamic Background Halos & Vector Graphics       -->
+  <!-- ========================================================================= -->
+  <div id="scrolly-container" class="relative w-full" style="height: 380vh;">
+    
+    <!-- Sticky Viewport -->
+    <div class="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 sm:px-8">
+      
+      <!-- ===================================================================== -->
+      <!-- DYNAMIC BACKGROUND LAYER PER TOOL (Halo + Distinct Background Graphic) -->
+      <!-- ===================================================================== -->
+      
+      <!-- 1. The Dynamic Color Halo -->
+      <div id="dynamic-halo" class="absolute inset-0 halo-blue-dark pointer-events-none transition-all duration-700 ease-out"></div>
+
+      <!-- 2. Distinct Background Graphics Per Tool -->
+      
+      <!-- Graphic 1: Heimdall Agent — Cross-Agent Junction Network Constellation -->
+      <div id="bg-graphic-1" class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-30 dark:opacity-40 transition-opacity duration-700">
+        <svg class="w-[1400px] h-[800px] max-w-none text-blue-500/25 dark:text-blue-400/30" viewBox="0 0 1400 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Junction Nodes & Connecting Synapses -->
+          <line x1="200" y1="200" x2="500" y2="400" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+          <line x1="1200" y1="200" x2="900" y2="400" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+          <line x1="500" y1="400" x2="900" y2="400" stroke="currentColor" stroke-width="2" />
+          <line x1="500" y1="400" x2="700" y2="650" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+          <line x1="900" y1="400" x2="700" y2="650" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+          
+          <!-- Large Orbit Circles -->
+          <circle cx="700" cy="400" r="320" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" />
+          <circle cx="700" cy="400" r="220" stroke="currentColor" stroke-width="1.2" />
+
+          <!-- Junction Hub Dots -->
+          <circle cx="500" cy="400" r="8" class="fill-blue-500" />
+          <circle cx="900" cy="400" r="8" class="fill-blue-500" />
+          <circle cx="700" cy="400" r="12" class="fill-blue-600 dark:fill-blue-400" />
+          <circle cx="700" cy="650" r="6" class="fill-blue-400" />
+          <circle cx="200" cy="200" r="6" class="fill-blue-400" />
+          <circle cx="1200" cy="200" r="6" class="fill-blue-400" />
+        </svg>
+      </div>
+
+      <!-- Graphic 2: GC-Helper — Radar Sweep & Health Ping Wave Rings -->
+      <div id="bg-graphic-2" class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-0 transition-opacity duration-700">
+        <svg class="w-[1400px] h-[800px] max-w-none text-emerald-500/25 dark:text-emerald-400/30" viewBox="0 0 1400 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Concentric Radar Circles -->
+          <circle cx="700" cy="400" r="120" stroke="currentColor" stroke-width="1.5" />
+          <circle cx="700" cy="400" r="240" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 6" />
+          <circle cx="700" cy="400" r="360" stroke="currentColor" stroke-width="1" />
+          <circle cx="700" cy="400" r="480" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 8" />
+
+          <!-- Crosshair Radar Axes -->
+          <line x1="150" y1="400" x2="1250" y2="400" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" />
+          <line x1="700" y1="50" x2="700" y2="750" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" />
+
+          <!-- Ping Nodes -->
+          <circle cx="700" cy="400" r="10" class="fill-emerald-500 animate-ping" />
+          <circle cx="700" cy="400" r="7" class="fill-emerald-500" />
+          <circle cx="820" cy="340" r="5" class="fill-emerald-400" />
+          <circle cx="580" cy="460" r="5" class="fill-emerald-400" />
+          <circle cx="940" cy="400" r="6" class="fill-emerald-400" />
+        </svg>
+      </div>
+
+      <!-- Graphic 3: LinkedIn-Agentic — Structured Storytelling Pipeline & Flow Nodes -->
+      <div id="bg-graphic-3" class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-0 transition-opacity duration-700">
+        <svg class="w-[1400px] h-[800px] max-w-none text-amber-500/25 dark:text-amber-400/30" viewBox="0 0 1400 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Horizontal Pipeline Pathway -->
+          <path d="M 200 400 L 450 400 L 550 320 L 850 320 L 950 400 L 1200 400" stroke="currentColor" stroke-width="2" />
+          <path d="M 450 400 L 550 480 L 850 480 L 950 400" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+          
+          <!-- Stepped Flow Nodes -->
+          <rect x="420" y="375" width="50" height="50" rx="10" stroke="currentColor" stroke-width="1.5" class="fill-amber-500/10" />
+          <rect x="675" y="295" width="50" height="50" rx="10" stroke="currentColor" stroke-width="1.5" class="fill-amber-500/10" />
+          <rect x="675" y="455" width="50" height="50" rx="10" stroke="currentColor" stroke-width="1.5" class="fill-amber-500/10" />
+          <rect x="930" y="375" width="50" height="50" rx="10" stroke="currentColor" stroke-width="1.5" class="fill-amber-500/10" />
+
+          <circle cx="445" cy="400" r="5" class="fill-amber-500" />
+          <circle cx="700" cy="320" r="5" class="fill-amber-500" />
+          <circle cx="700" cy="480" r="5" class="fill-amber-500" />
+          <circle cx="955" cy="400" r="5" class="fill-amber-500" />
+        </svg>
+      </div>
+
+      <!-- Right Side Progress Scrubber -->
+      <div class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-3 font-mono text-[11px]">
+        <span id="hud-scene-num" class="text-blue-500 font-bold transition-colors">1 / 3</span>
+        <div class="w-1 h-36 rounded-full scrub-track relative overflow-hidden">
+          <div id="hud-scrub-bar" class="w-full bg-blue-500 rounded-full scrub-fill" style="height: 0%;"></div>
+        </div>
+        <span id="hud-scene-name" class="text-slate-400 tracking-wider uppercase text-[9px] -rotate-90 mt-4 origin-center transition-colors">HEIMDALL</span>
+      </div>
+
+      <!-- The Perspective Stage Canvas -->
+      <div class="perspective-stage w-full max-w-5xl flex items-center justify-center relative z-20">
+
+        <!-- =================================================================== -->
+        <!-- Tool 1: heimdall-agent (Cobalt Blue Personality)                   -->
+        <!-- =================================================================== -->
+        <div id="scene-1" class="scene-card w-full bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border border-glow-blue rounded-2xl p-5 sm:p-8 lg:p-10 max-h-[85vh] overflow-y-auto sm:overflow-visible stage-shadow-dark transition-all">
+          
+          <!-- Header -->
+          <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6 border-b border-light-border dark:border-dark-border pb-6">
+            <div class="space-y-3 max-w-2xl">
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30" data-i18n="badge-toolkit">
+                  CLI &amp; AGENT TOOLKIT
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono text-blue-500 bg-blue-500/10 border border-blue-500/30 font-semibold">
+                  v1.1.0 on npm
+                </span>
+              </div>
+              
+              <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+                <span>heimdall-agent</span>
+                <span class="text-xs font-mono font-normal text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">Sync Engine</span>
+              </h2>
+
+              <p class="text-base sm:text-lg text-slate-700 dark:text-slate-200 font-sans leading-relaxed" data-i18n="h-pitch">
+                A curated, pre-packaged toolkit with battle-tested agent personas and skills ready to use. Optimized to drop right into your coding assistants so you never have to configure skills manually again.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer" 
+                 class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-dark-card hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-medium text-slate-800 dark:text-white border border-light-border dark:border-dark-border flex items-center gap-2 transition-colors">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                <span data-i18n="btn-repo">GitHub Repo</span>
+              </a>
+              <a href="https://www.npmjs.com/package/heimdall-agent" target="_blank" rel="noopener noreferrer" 
+                 class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white flex items-center gap-2 transition-colors shadow-lg shadow-blue-600/25">
+                <i data-lucide="box" class="w-4 h-4"></i>
+                <span>npm package</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Problem vs Solution Breakdown -->
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+            <div class="bg-red-500/5 border border-red-500/20 p-4 rounded-xl space-y-1.5">
+              <div class="text-red-500 font-bold flex items-center gap-1.5">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                <span data-i18n="prob-title">The Problem</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 font-sans text-xs leading-relaxed" data-i18n="h-prob-desc">
+                AI coding tools (Antigravity, Claude Code, Codex) start completely empty. Setting up roles, skills, and testing guardrails across each tool by hand is repetitive and constantly drifts out of sync.
+              </p>
+            </div>
+
+            <div class="bg-blue-500/5 border border-blue-500/20 p-4 rounded-xl space-y-1.5">
+              <div class="text-blue-500 font-bold flex items-center gap-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span data-i18n="sol-title">What Heimdall Does</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 font-sans text-xs leading-relaxed" data-i18n="h-sol-desc">
+                Delivers 56 curated skills and 10 specialized agent roles (reviewers, testers, architects) in one command. Uses live NTFS junctions so all your tools stay synchronized from a single source.
+              </p>
+            </div>
+          </div>
+
+          <!-- 1-Click Install Command -->
+          <div class="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-light-cmd dark:bg-dark-cmd p-3.5 rounded-xl border border-light-border dark:border-dark-border font-mono text-xs">
+            <div class="flex items-center gap-2 text-slate-800 dark:text-slate-200 overflow-x-auto">
+              <span class="text-blue-500 font-bold select-none">$</span>
+              <span class="select-all">npm i -g heimdall-agent &amp;&amp; heimdall sync</span>
+            </div>
+            <button onclick="copyCommand('npm i -g heimdall-agent && heimdall sync', this)" 
+                    class="px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-white border border-light-border dark:border-slate-700 flex items-center gap-1.5 transition-colors shrink-0 shadow-sm">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span data-i18n="copy">Copy Command</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Tool 2: gc-helper (Emerald Mint Personality)                       -->
+        <!-- =================================================================== -->
+        <div id="scene-2" class="scene-card hidden w-full bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border border-glow-emerald rounded-2xl p-5 sm:p-8 lg:p-10 max-h-[85vh] overflow-y-auto sm:overflow-visible stage-shadow-dark transition-all">
+          
+          <!-- Header -->
+          <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6 border-b border-light-border dark:border-dark-border pb-6">
+            <div class="space-y-3 max-w-2xl">
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30" data-i18n="badge-auditor">
+                  ENVIRONMENT AUDITOR
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono text-emerald-500 bg-emerald-500/10 border border-emerald-500/30 font-semibold" data-i18n="badge-zerodep">
+                  v1.1.0 on npm &bull; Zero Dependencies
+                </span>
+              </div>
+              
+              <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+                <span>gc-helper</span>
+                <span class="text-xs font-mono font-normal text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">GhostCLI Bridge</span>
+              </h2>
+
+              <p class="text-base sm:text-lg text-slate-700 dark:text-slate-200 font-sans leading-relaxed" data-i18n="gc-pitch">
+                Helps you configure and set up your environment if you use ghostcli.cloud. Automatically detects your installed AI tools, wires up endpoints and tokens, and verifies your connection in seconds.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer" 
+                 class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-dark-card hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-medium text-slate-800 dark:text-white border border-light-border dark:border-dark-border flex items-center gap-2 transition-colors">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                <span data-i18n="btn-repo">GitHub Repo</span>
+              </a>
+              <a href="https://www.npmjs.com/package/gc-helper" target="_blank" rel="noopener noreferrer" 
+                 class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white flex items-center gap-2 transition-colors shadow-lg shadow-emerald-600/25">
+                <i data-lucide="box" class="w-4 h-4"></i>
+                <span>npm package</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Problem vs Solution Breakdown -->
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+            <div class="bg-red-500/5 border border-red-500/20 p-4 rounded-xl space-y-1.5">
+              <div class="text-red-500 font-bold flex items-center gap-1.5">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                <span data-i18n="prob-title">The Problem</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 font-sans text-xs leading-relaxed" data-i18n="gc-prob-desc">
+                Configuring GhostCLI across Claude Code, VS Code, Codex CLI, and Hermes requires hunting down different config files, base URLs, and environment variables for each tool. One typo breaks everything.
+              </p>
+            </div>
+
+            <div class="bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-xl space-y-1.5">
+              <div class="text-emerald-500 font-bold flex items-center gap-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span data-i18n="sol-title">What gc-helper Does</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 font-sans text-xs leading-relaxed" data-i18n="gc-sol-desc">
+                Scans your workstation, auto-configures your proxy endpoints with one command, and pings models in real time to filter dead routes and show actual connection latency. Zero external npm dependencies.
+              </p>
+            </div>
+          </div>
+
+          <!-- 1-Click Run Command -->
+          <div class="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-light-cmd dark:bg-dark-cmd p-3.5 rounded-xl border border-light-border dark:border-dark-border font-mono text-xs">
+            <div class="flex items-center gap-2 text-slate-800 dark:text-slate-200 overflow-x-auto">
+              <span class="text-emerald-500 font-bold select-none">$</span>
+              <span class="select-all">npx gc-helper status</span>
+            </div>
+            <button onclick="copyCommand('npx gc-helper status', this)" 
+                    class="px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-white border border-light-border dark:border-slate-700 flex items-center gap-1.5 transition-colors shrink-0 shadow-sm">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span data-i18n="copy">Copy Command</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Tool 3: linkedin-agentic (Warm Amber Personality)                  -->
+        <!-- =================================================================== -->
+        <div id="scene-3" class="scene-card hidden w-full bg-light-surface dark:bg-dark-surface border border-dashed border-amber-500/40 border-glow-amber rounded-2xl p-5 sm:p-8 lg:p-10 max-h-[85vh] overflow-y-auto sm:overflow-visible stage-shadow-dark transition-all">
+          
+          <!-- Header -->
+          <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6 border-b border-light-border dark:border-dark-border pb-6">
+            <div class="space-y-3 max-w-2xl">
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30" data-i18n="badge-automation">
+                  DEVELOPER AUTOMATION
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono text-amber-500 bg-amber-500/10 border border-amber-500/30 font-semibold flex items-center gap-1" data-i18n="badge-wip">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  In Active Development
+                </span>
+              </div>
+              
+              <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+                <span>linkedin-agentic</span>
+                <span class="text-xs font-mono font-normal text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">Growth Agent</span>
+              </h2>
+
+              <p class="text-base sm:text-lg text-slate-700 dark:text-slate-200 font-sans leading-relaxed" data-i18n="li-pitch">
+                An autonomous agent that turns your actual coding progress, git diffs, and project breakthroughs into authentic technical posts on LinkedIn—without generic AI fluff, and with a human review step before anything publishes.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <span class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-dark-card text-xs font-mono text-slate-600 dark:text-slate-400 border border-light-border dark:border-dark-border flex items-center gap-2">
+                <i data-lucide="clock" class="w-4 h-4"></i>
+                <span data-i18n="coming-soon">Coming Soon</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Problem vs Solution Breakdown -->
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+            <div class="bg-red-500/5 border border-red-500/20 p-4 rounded-xl space-y-1.5">
+              <div class="text-red-500 font-bold flex items-center gap-1.5">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                <span data-i18n="prob-title">The Problem</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 font-sans text-xs leading-relaxed" data-i18n="li-prob-desc">
+                Most social automation tools produce cringe, robotic AI-generated posts full of buzzwords and emoji spam that real engineers scroll past immediately.
+              </p>
+            </div>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 p-4 rounded-xl space-y-1.5">
+              <div class="text-amber-500 font-bold flex items-center gap-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span data-i18n="li-sol-title">What linkedin-agentic Does</span>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 font-sans text-xs leading-relaxed" data-i18n="li-sol-desc">
+                Synthesizes real technical substance directly from your repository work, drafts clear human copy under strict anti-slop rules, and requires your explicit approval in the terminal before scheduling.
+              </p>
+            </div>
+          </div>
+
+          <!-- Status Card -->
+          <div class="mt-6 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3.5 flex items-center gap-2.5 text-xs text-amber-700 dark:text-amber-300 font-mono">
+            <i data-lucide="info" class="w-4 h-4 shrink-0 text-amber-500"></i>
+            <span data-i18n="li-note">Currently being engineered locally. Open-source release will be published on GitHub upon completion.</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- Colophon / Clean Personal Footer                                          -->
+  <!-- ========================================================================= -->
+  <footer class="bg-slate-100 dark:bg-dark-bg border-t border-light-border dark:border-dark-border py-12 transition-colors">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs font-mono text-slate-500 dark:text-slate-400">
+      <div>
+        &copy; <span id="year">2026</span> Bernardo Paldes &bull; MIT License
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-white transition-colors" data-i18n="footer-profile">GitHub Profile</a>
+        <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-white transition-colors">heimdall-agent</a>
+        <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-white transition-colors">gc-helper</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- Scrollytelling Engine with Dynamic Halo & Graphic Morphing                -->
+  <!-- ========================================================================= -->
+  <script>
+    lucide.createIcons();
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Elements
+    const container = document.getElementById('scrolly-container');
+    const dynamicHalo = document.getElementById('dynamic-halo');
+    const hudNum = document.getElementById('hud-scene-num');
+    const hudBar = document.getElementById('hud-scrub-bar');
+    const hudName = document.getElementById('hud-scene-name');
+
+    const scene1 = document.getElementById('scene-1');
+    const scene2 = document.getElementById('scene-2');
+    const scene3 = document.getElementById('scene-3');
+
+    const bg1 = document.getElementById('bg-graphic-1');
+    const bg2 = document.getElementById('bg-graphic-2');
+    const bg3 = document.getElementById('bg-graphic-3');
+
+    let currentScene = 1;
+
+    function onScroll() {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const totalDist = container.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      let progress = Math.max(0, Math.min(1, scrolled / totalDist));
+
+      if (hudBar) hudBar.style.height = `${progress * 100}%`;
+
+      let newScene = 1;
+      if (progress >= 0.66) {
+        newScene = 3;
+      } else if (progress >= 0.33) {
+        newScene = 2;
+      } else {
+        newScene = 1;
+      }
+
+      if (newScene !== currentScene) {
+        currentScene = newScene;
+        renderScene(currentScene);
+      }
+    }
+
+    function renderScene(sceneIdx) {
+      const isDark = document.documentElement.classList.contains('dark');
+
+      // 1. Scene Card Transitions
+      [scene1, scene2, scene3].forEach((s, idx) => {
+        if (idx + 1 === sceneIdx) {
+          s.classList.remove('hidden');
+          s.style.opacity = '1';
+          s.style.transform = 'translateY(0) scale(1) rotateX(0deg)';
+        } else {
+          s.classList.add('hidden');
+          s.style.opacity = '0';
+          s.style.transform = 'translateY(25px) scale(0.97) rotateX(3deg)';
+        }
+      });
+
+      // 2. Background Graphics Cross-Fade
+      if (bg1 && bg2 && bg3) {
+        bg1.style.opacity = sceneIdx === 1 ? (isDark ? '0.4' : '0.35') : '0';
+        bg2.style.opacity = sceneIdx === 2 ? (isDark ? '0.4' : '0.35') : '0';
+        bg3.style.opacity = sceneIdx === 3 ? (isDark ? '0.4' : '0.35') : '0';
+      }
+
+      // 3. Dynamic Ambient Halo Color Tone
+      if (dynamicHalo) {
+        if (sceneIdx === 1) {
+          dynamicHalo.className = isDark 
+            ? "absolute inset-0 halo-blue-dark pointer-events-none transition-all duration-700 ease-out" 
+            : "absolute inset-0 halo-blue-light pointer-events-none transition-all duration-700 ease-out";
+          hudBar.className = "w-full bg-blue-500 rounded-full scrub-fill";
+          hudNum.className = "text-blue-500 font-bold transition-colors";
+        } else if (sceneIdx === 2) {
+          dynamicHalo.className = isDark 
+            ? "absolute inset-0 halo-emerald-dark pointer-events-none transition-all duration-700 ease-out" 
+            : "absolute inset-0 halo-emerald-light pointer-events-none transition-all duration-700 ease-out";
+          hudBar.className = "w-full bg-emerald-500 rounded-full scrub-fill";
+          hudNum.className = "text-emerald-500 font-bold transition-colors";
+        } else {
+          dynamicHalo.className = isDark 
+            ? "absolute inset-0 halo-amber-dark pointer-events-none transition-all duration-700 ease-out" 
+            : "absolute inset-0 halo-amber-light pointer-events-none transition-all duration-700 ease-out";
+          hudBar.className = "w-full bg-amber-500 rounded-full scrub-fill";
+          hudNum.className = "text-amber-500 font-bold transition-colors";
+        }
+      }
+
+      // 4. HUD Labels
+      const names = ['HEIMDALL', 'GC-HELPER', 'LINKEDIN'];
+      if (hudNum) hudNum.textContent = `0${sceneIdx} / 03`;
+      if (hudName) hudName.textContent = names[sceneIdx - 1];
+
+      // 5. Navigation Tabs
+      for (let i = 1; i <= 3; i++) {
+        const navBtn = document.getElementById(`nav-tool-${i}`);
+        if (navBtn) {
+          if (i === sceneIdx) {
+            navBtn.className = "px-3 py-1.5 rounded-md font-semibold text-slate-900 dark:text-white bg-slate-200/70 dark:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-sm";
+          } else {
+            navBtn.className = "px-3 py-1.5 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5";
+          }
+        }
+      }
+      lucide.createIcons();
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+
+    function scrollToScene(sceneIdx) {
+      const totalDist = container.offsetHeight - window.innerHeight;
+      const targetTops = [0, totalDist * 0.45, totalDist * 0.85];
+      const targetScroll = container.offsetTop + targetTops[sceneIdx - 1];
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
+
+    // Theme Engine
+    function initTheme() {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = stored ? stored === 'dark' : prefersDark;
+      applyTheme(isDark);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      applyTheme(!isDark);
+    }
+
+    function applyTheme(isDark) {
+      const html = document.documentElement;
+      const hero = document.getElementById('hero');
+      const sunIcon = document.getElementById('theme-icon-sun');
+      const moonIcon = document.getElementById('theme-icon-moon');
+
+      if (isDark) {
+        html.classList.add('dark');
+        if (hero) hero.className = "relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 pt-24 pb-16 overflow-hidden hero-grid-dark transition-colors";
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        html.classList.remove('dark');
+        if (hero) hero.className = "relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 pt-24 pb-16 overflow-hidden hero-grid-light transition-colors";
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+        localStorage.setItem('theme', 'light');
+      }
+      renderScene(currentScene);
+      lucide.createIcons();
+    }
+
+    initTheme();
+
+    // Clipboard Copy
+    function copyCommand(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = button.innerHTML;
+        button.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 inline"></i> <span class="text-emerald-500">Copied!</span>';
+        lucide.createIcons();
+        setTimeout(() => {
+          button.innerHTML = original;
+          lucide.createIcons();
+        }, 1800);
+      });
+    }
+
+    // Translations
+    const translations = {
+      en: {
+        "nav-sub": "Open Source Tools",
+        "hero-title": "Open-source tools to make developer workflows smoother.",
+        "hero-desc": "Fast, open-source CLI utilities and agent workflows for AI coding assistants, environment setup, and developer automation.",
+        "scroll-prompt": "Scroll down to see what each tool does",
+        "badge-toolkit": "CLI & AGENT TOOLKIT",
+        "badge-auditor": "ENVIRONMENT AUDITOR",
+        "badge-automation": "DEVELOPER AUTOMATION",
+        "badge-zerodep": "v1.1.0 on npm • Zero Dependencies",
+        "btn-repo": "GitHub Repo",
+        "prob-title": "The Problem",
+        "sol-title": "What Heimdall Does",
+        "copy": "Copy Command",
+        "h-pitch": "A curated, pre-packaged toolkit with battle-tested agent personas and skills ready to use. Optimized to drop right into your coding assistants so you never have to configure skills manually again.",
+        "h-prob-desc": "AI coding tools (Antigravity, Claude Code, Codex) start completely empty. Setting up roles, skills, and testing guardrails across each tool by hand is repetitive and constantly drifts out of sync.",
+        "h-sol-desc": "Delivers 56 curated skills and 10 specialized agent roles (reviewers, testers, architects) in one command. Uses live NTFS junctions so all your tools stay synchronized from a single source.",
+        "gc-pitch": "Helps you configure and set up your environment if you use ghostcli.cloud. Automatically detects your installed AI tools, wires up endpoints and tokens, and verifies your connection in seconds.",
+        "gc-prob-desc": "Configuring GhostCLI across Claude Code, VS Code, Codex CLI, and Hermes requires hunting down different config files, base URLs, and environment variables for each tool. One typo breaks everything.",
+        "gc-sol-title": "What gc-helper Does",
+        "gc-sol-desc": "Scans your workstation, auto-configures your proxy endpoints with one command, and pings models in real time to filter dead routes and show actual connection latency. Zero external npm dependencies.",
+        "badge-wip": "In Active Development",
+        "li-pitch": "An autonomous agent that turns your actual coding progress, git diffs, and project breakthroughs into authentic technical posts on LinkedIn—without generic AI fluff, and with a human review step before anything publishes.",
+        "li-prob-desc": "Most social automation tools produce cringe, robotic AI-generated posts full of buzzwords and emoji spam that real engineers scroll past immediately.",
+        "li-sol-title": "What linkedin-agentic Does",
+        "li-sol-desc": "Synthesizes real technical substance directly from your repository work, drafts clear human copy under strict anti-slop rules, and requires your explicit approval in the terminal before scheduling.",
+        "coming-soon": "Coming Soon",
+        "li-note": "Currently being engineered locally. Open-source release will be published on GitHub upon completion.",
+        "footer-profile": "GitHub Profile"
+      },
+      pt: {
+        "nav-sub": "Ferramentas Open Source",
+        "hero-title": "Ferramentas open source feitas para simplificar o seu fluxo de desenvolvimento.",
+        "hero-desc": "Utilitários CLI rápidos e agentes autônomos para potencializar assistentes de IA, configurar ambientes e automatizar rotinas de engenharia.",
+        "scroll-prompt": "Role para baixo para ver o que cada ferramenta resolve",
+        "badge-toolkit": "TOOLKIT CLI & AGENTES",
+        "badge-auditor": "AUDITOR DE AMBIENTE",
+        "badge-automation": "AUTOMAÇÃO PARA DEVS",
+        "badge-zerodep": "v1.1.0 no npm • Zero Dependências",
+        "btn-repo": "Ver no GitHub",
+        "prob-title": "O Problema",
+        "sol-title": "Como o Heimdall Resolve",
+        "copy": "Copiar Comando",
+        "h-pitch": "Um pacote curado e pronto para uso com personas e habilidades de agentes testadas na prática. Otimizado para plugar direto nos seus assistentes de código e nunca mais perder tempo configurando tudo do zero.",
+        "h-prob-desc": "Assistentes de código com IA (como Antigravity, Claude Code e Codex) começam totalmente vazios. Configurar personas, regras e rotinas de teste em cada ferramenta na mão é repetitivo e vive saindo de sincronia.",
+        "h-sol-desc": "Entrega 56 habilidades curadas e 10 papéis de agentes especializados (revisores, arquitetos, testadores) com um só comando. Cria junções NTFS no sistema para manter todas as suas IAs sincronizadas a partir de uma única fonte da verdade.",
+        "gc-pitch": "Facilita a configuração do seu ambiente de desenvolvimento se você usa o ghostcli.cloud. Detecta automaticamente os assistentes instalados, configura endpoints e chaves de acesso, e valida sua conexão em segundos.",
+        "gc-prob-desc": "Configurar o GhostCLI no Claude Code, VS Code, Codex e Hermes exige caçar arquivos de configuração escondidos, ajustar URLs base e criar variáveis de ambiente na mão. Um caractere errado quebra tudo.",
+        "gc-sol-title": "Como o gc-helper Resolve",
+        "gc-sol-desc": "Faz um scan na sua máquina, ajusta os endpoints de proxy com um comando só e testa a latência dos modelos em tempo real para eliminar rotas inativas. Sem dependências externas no npm.",
+        "badge-wip": "Em Desenvolvimento Ativo",
+        "li-pitch": "Um agente autônomo que transforma suas entregas de código, diffs de git e marcos do projeto em posts técnicos autênticos no LinkedIn — sem clichês de IA corporativa e com a sua aprovação obrigatória antes de publicar.",
+        "li-prob-desc": "A maioria das ferramentas de automação gera posts robóticos e superficiais, cheios de jargões vazios e emojis que qualquer desenvolvedor passa batido.",
+        "li-sol-title": "Como o linkedin-agentic Resolve",
+        "li-sol-desc": "Extrai valor técnico real direto do seu trabalho no repositório, redige textos humanos e objetivos seguindo regras anti-slop, e exige a sua confirmação explícita no terminal antes de agendar qualquer postagem.",
+        "coming-soon": "Em Breve",
+        "li-note": "Em desenvolvimento local ativo. O lançamento open source será publicado no GitHub assim que for concluído.",
+        "footer-profile": "Perfil no GitHub"
+      }
+    };
+
+    function setLanguage(lang) {
+      const selected = translations[lang] ? lang : 'en';
+      document.documentElement.setAttribute('lang', selected === 'pt' ? 'pt-BR' : 'en');
+      
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[selected][key]) {
+          el.innerHTML = translations[selected][key];
+        }
+      });
+
+      const btnEn = document.getElementById('lang-en');
+      const btnPt = document.getElementById('lang-pt');
+
+      if (selected === 'en') {
+        btnEn.className = "px-2.5 py-1 rounded-md font-semibold text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-sm transition-all";
+        btnPt.className = "px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all";
+      } else {
+        btnPt.className = "px-2.5 py-1 rounded-md font-semibold text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-sm transition-all";
+        btnEn.className = "px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all";
+      }
+    }
+  </script>
+</body>
+</html>

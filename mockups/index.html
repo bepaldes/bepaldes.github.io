@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Comparison — Scrollytelling vs Classic</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-white flex flex-col h-screen overflow-hidden font-sans">
+  <!-- Comparison Toolbar -->
+  <header class="h-14 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3">
+      <span class="font-bold text-sm tracking-tight text-white">bepaldes.github.io</span>
+      <span class="text-xs text-slate-500">/</span>
+      <span class="text-xs text-slate-300">Design Prototypes</span>
+    </div>
+
+    <!-- Switcher Controls -->
+    <div class="inline-flex rounded-lg bg-slate-800 p-1 border border-slate-700 text-xs">
+      <button id="btn-d" onclick="loadView('d')" class="px-4 py-1.5 rounded-md font-semibold bg-blue-600 text-white transition-all shadow-sm">
+        Option D: Scrollytelling (New)
+      </button>
+      <button id="btn-c" onclick="loadView('c')" class="px-4 py-1.5 rounded-md text-slate-300 hover:text-white transition-all">
+        Option C: Catalog List
+      </button>
+      <button id="btn-a" onclick="loadView('a')" class="px-4 py-1.5 rounded-md text-slate-300 hover:text-white transition-all">
+        Option A: Editorial
+      </button>
+    </div>
+
+    <!-- Direct Link -->
+    <div class="flex items-center gap-3 text-xs text-slate-400 font-mono">
+      <a id="link-direct" href="./mockup-d-scrollytelling.html" target="_blank" class="hover:text-white underline">
+        Open Fullscreen &nearr;
+      </a>
+    </div>
+  </header>
+
+  <!-- Fullscreen Preview Frame -->
+  <main class="flex-1 w-full bg-black">
+    <iframe id="preview-frame" src="./mockup-d-scrollytelling.html" class="w-full h-full border-0"></iframe>
+  </main>
+
+  <script>
+    function loadView(opt) {
+      const frame = document.getElementById('preview-frame');
+      const btnD = document.getElementById('btn-d');
+      const btnC = document.getElementById('btn-c');
+      const btnA = document.getElementById('btn-a');
+      const direct = document.getElementById('link-direct');
+
+      const inactive = "px-4 py-1.5 rounded-md text-slate-300 hover:text-white transition-all";
+
+      if (opt === 'd') {
+        frame.src = './mockup-d-scrollytelling.html';
+        direct.href = './mockup-d-scrollytelling.html';
+        btnD.className = "px-4 py-1.5 rounded-md font-semibold bg-blue-600 text-white transition-all shadow-sm";
+        btnC.className = inactive;
+        btnA.className = inactive;
+      } else if (opt === 'c') {
+        frame.src = './mockup-c-dev-showcase.html';
+        direct.href = './mockup-c-dev-showcase.html';
+        btnC.className = "px-4 py-1.5 rounded-md font-semibold bg-slate-700 text-white transition-all shadow-sm";
+        btnD.className = inactive;
+        btnA.className = inactive;
+      } else {
+        frame.src = './mockup-a-systems-journal.html';
+        direct.href = './mockup-a-systems-journal.html';
+        btnA.className = "px-4 py-1.5 rounded-md font-semibold bg-amber-500 text-black transition-all shadow-sm";
+        btnD.className = inactive;
+        btnC.className = inactive;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bernardo Paldes — Systems Journal & Agent Engineering</title>
+  <meta name="description" content="Deterministic sentinels, execution doctrine, and runtime bridges for AI coding assistants.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              950: '#07090d',
+              900: '#0b0e14',
+              850: '#10141d',
+              800: '#161c28',
+              700: '#222b3d',
+              600: '#323e54',
+            },
+            accent: {
+              amber: '#f59e0b',
+              emerald: '#10b981',
+              cyan: '#06b6d4',
+              blue: '#3b82f6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #07090d;
+      color: #cbd5e1;
+    }
+    .hairline-border {
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .hairline-b {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .hairline-t {
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .terminal-scroll::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+    }
+    .terminal-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500/20 selection:text-amber-200">
+
+  <!-- Top Header / Navigation -->
+  <header class="sticky top-0 z-50 bg-[#07090d]/85 backdrop-blur-md hairline-b">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      
+      <!-- Identity -->
+      <div class="flex items-center gap-4">
+        <a href="#" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 rounded bg-obsidian-850 hairline-border flex items-center justify-center font-mono font-bold text-xs text-amber-400 group-hover:border-amber-400/50 transition-colors">
+            BP
+          </div>
+          <div>
+            <div class="font-semibold text-white tracking-tight text-sm leading-none">Bernardo Paldes</div>
+            <div class="text-[10px] font-mono text-slate-400 mt-1">systems &bull; agent-runtimes</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation & Controls -->
+      <div class="flex items-center gap-3">
+        <!-- Telemetry Pill -->
+        <div class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-obsidian-850 hairline-border text-[11px] font-mono text-slate-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>v1.1.0 STABLE</span>
+        </div>
+
+        <!-- Language Switcher -->
+        <div class="inline-flex items-center rounded bg-obsidian-850 hairline-border p-0.5 font-mono text-xs text-slate-400" role="group">
+          <button type="button" id="lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded text-[11px] font-semibold text-white bg-obsidian-700 transition-colors" aria-pressed="true">
+            EN
+          </button>
+          <button type="button" id="lang-pt" onclick="setLanguage('pt')" class="px-2.5 py-1 rounded text-[11px] hover:text-white transition-colors" aria-pressed="false">
+            PT-BR
+          </button>
+        </div>
+
+        <!-- GitHub Profile -->
+        <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-white px-3 py-1.5 rounded bg-obsidian-850 hover:bg-obsidian-800 hairline-border transition-colors">
+          <i data-lucide="github" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">github.com/bepaldes</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl mx-auto px-6 py-12 sm:py-16 flex-1 w-full space-y-16 sm:space-y-24">
+
+    <!-- Hero / Split Editorial Dossier -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start hairline-b pb-16">
+      
+      <!-- Left Column: Editorial Statement -->
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 text-xs font-mono text-amber-400 tracking-wider uppercase">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span data-i18n="hero-tag">Engineering Doctrine & Runtime Sentinel</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-[1.08]">
+          <span data-i18n="hero-title">Deterministic sentinels and universal doctrine for AI coding assistants.</span>
+        </h1>
+
+        <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-sans max-w-xl" data-i18n="hero-desc">
+          Building high-resilience bridges, model-agnostic execution guardrails, and dynamic context discovery for production developer harnesses. Zero dev-server sprawl, single-writer memory discipline, and surgical Karpathy simplicity.
+        </p>
+
+        <!-- Metrics Ticker -->
+        <div class="pt-4 grid grid-cols-3 gap-4 border-t border-white/5 font-mono">
+          <div>
+            <div class="text-2xl font-bold text-white tracking-tight">56</div>
+            <div class="text-[11px] text-slate-400 uppercase mt-0.5" data-i18n="metric-skills">Curated Skills</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-white tracking-tight">24</div>
+            <div class="text-[11px] text-slate-400 uppercase mt-0.5" data-i18n="metric-suites">Specialized Suites</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-emerald-400 tracking-tight">6</div>
+            <div class="text-[11px] text-slate-400 uppercase mt-0.5" data-i18n="metric-runtimes">Active Harnesses</div>
+          </div>
+        </div>
+
+        <!-- Harness Tag Cluster -->
+        <div class="pt-2 flex flex-wrap items-center gap-2 text-xs font-mono text-slate-400">
+          <span class="text-[11px] uppercase tracking-wider text-slate-400" data-i18n="env-label">Synchronized Runtimes:</span>
+          <span class="px-2 py-0.5 rounded bg-obsidian-850 hairline-border text-slate-300">Google Antigravity</span>
+          <span class="px-2 py-0.5 rounded bg-obsidian-850 hairline-border text-slate-300">Claude Code</span>
+          <span class="px-2 py-0.5 rounded bg-obsidian-850 hairline-border text-slate-300">OpenAI Codex CLI</span>
+          <span class="px-2 py-0.5 rounded bg-obsidian-850 hairline-border text-slate-300">Hermes Agent</span>
+          <span class="px-2 py-0.5 rounded bg-obsidian-850 hairline-border text-slate-300">Claude Desktop</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Live Terminal Widget -->
+      <div class="lg:col-span-5 bg-obsidian-900 rounded-lg hairline-border overflow-hidden shadow-2xl">
+        <!-- Terminal Header & Tabs -->
+        <div class="bg-obsidian-850 hairline-b px-4 py-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block"></span>
+            <span class="ml-2 text-[11px] font-mono text-slate-400">heimdall-terminal</span>
+          </div>
+
+          <!-- Tab Controls -->
+          <div class="flex items-center gap-1 font-mono text-[11px]">
+            <button onclick="switchTerminal('audit')" id="tab-audit" class="px-2 py-0.5 rounded bg-obsidian-700 text-white font-medium transition-colors">audit</button>
+            <button onclick="switchTerminal('status')" id="tab-status" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition-colors">gc-status</button>
+            <button onclick="switchTerminal('doctrine')" id="tab-doctrine" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition-colors">doctrine</button>
+          </div>
+        </div>
+
+        <!-- Terminal Content Pane -->
+        <div class="p-4 font-mono text-xs leading-relaxed overflow-x-auto terminal-scroll h-[340px] bg-obsidian-950/80">
+          
+          <!-- Tab 1: Heimdall Audit -->
+          <div id="pane-audit" class="space-y-2">
+            <div class="text-amber-400 font-bold">
+              $ npx heimdall-agent audit
+            </div>
+            <div class="text-slate-400 text-[10px] leading-tight select-none">
+=== Heimdall Environment Audit ===<br>
+Target Runtimes Detected:<br>
+  • Google Antigravity : ACTIVE (Default Native Account)<br>
+  • Claude Code CLI    : ACTIVE (Endpoint: GhostCLI)<br>
+  • OpenAI Codex CLI   : ACTIVE (Endpoint: GhostCLI/v1)<br>
+  • Hermes Agent       : ACTIVE (Max context 1M tokens injected)<br>
+<br>
+Live Junction Integrity:<br>
+  • Canonical Skills   : 24 Suites (56 modules)<br>
+  • Predefined Personas: 10 Specialized Personas<br>
+  • MCP Servers        : open-design, context7, rea<br>
+  • Quality Gate       : 32/32 tests passing [OK]
+            </div>
+            <div class="pt-2 text-emerald-400 flex items-center gap-1.5">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 inline"></i>
+              <span>All 6 environments converged and healthy.</span>
+            </div>
+          </div>
+
+          <!-- Tab 2: GC-Status -->
+          <div id="pane-status" class="hidden space-y-2">
+            <div class="text-emerald-400 font-bold">
+              $ npx gc-helper status
+            </div>
+            <div class="text-slate-400 text-[10px] leading-tight select-none">
+[GC-HELPER v1.1.0] Live Runtime Health Audit<br>
+---------------------------------------------<br>
+• GhostCLI Endpoint : Reachable (latency: 142ms)<br>
+• Model Discovery   : 28 active models mapped<br>
+• Extended Windows  : claude-opus-5-5 (1M tokens)<br>
+                      claude-sonnet-5 (1M tokens)<br>
+• Auto-Configured   : Claude, Codex, Hermes, VS Code<br>
+• Dependencies      : 0 (Pure Node.js standard library)
+            </div>
+            <div class="pt-2 text-cyan-400 flex items-center gap-1.5">
+              <i data-lucide="radio" class="w-3.5 h-3.5 inline"></i>
+              <span>Zero external bloat. Instant execution.</span>
+            </div>
+          </div>
+
+          <!-- Tab 3: Doctrine -->
+          <div id="pane-doctrine" class="hidden space-y-2">
+            <div class="text-cyan-400 font-bold">
+              $ cat C:\Apps\AGENTS.md
+            </div>
+            <div class="text-slate-400 text-[10px] leading-tight select-none">
+&lt;cross_agent_harness_discipline priority="CRITICAL"&gt;<br>
+  • STRICT ZERO DEV-SERVER POLICY: Never spawn dev servers.<br>
+    Verify with terminating tests (npm test, tsc, pytest).<br>
+  • AUTONOMOUS INVESTIGATION: Zero lazy clarification.<br>
+  • KARPATHY RESTRAINT: Surgical edits, zero sprawl.<br>
+  • 3-TIER INSTRUCTION MODEL: Persona, Lifecycle, Guardrails.<br>
+  • CANONICAL MODELS: opus-5-5, sonnet-5 (never sonnet-5-5).
+            </div>
+            <div class="pt-2 text-amber-400 flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-3.5 h-3.5 inline"></i>
+              <span>Universal across Antigravity, Claude & Codex.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Terminal Footer -->
+        <div class="bg-obsidian-850 px-4 py-2 hairline-t flex items-center justify-between text-[11px] font-mono text-slate-400">
+          <span>node v18+ required</span>
+          <button onclick="copyCommand('npm i -g heimdall-agent', this)" class="hover:text-white flex items-center gap-1 transition-colors">
+            <i data-lucide="copy" class="w-3 h-3"></i>
+            <span>copy install</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Public Projects Section -->
+    <section class="space-y-8">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 hairline-b pb-4">
+        <div>
+          <div class="text-xs font-mono text-amber-400 uppercase tracking-wider" data-i18n="projects-label">Work & Artifacts</div>
+          <h2 class="text-2xl sm:text-3xl font-serif text-white tracking-tight mt-1" data-i18n="projects-heading">Core Open Source Projects</h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400" data-i18n="projects-sub">Published to npm and GitHub under MIT License</p>
+      </div>
+
+      <!-- Project 1: Heimdall Agent -->
+      <article class="bg-obsidian-900 rounded-lg hairline-border p-6 sm:p-8 space-y-6 hover:border-slate-600/60 transition-all">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 hairline-b pb-6">
+          <div class="space-y-1">
+            <div class="flex items-center gap-3">
+              <h3 class="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">heimdall-agent</h3>
+              <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20">v1.1.0</span>
+              <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-obsidian-800 text-slate-300 hairline-border">npm</span>
+            </div>
+            <p class="text-sm text-slate-300 font-sans" data-i18n="heimdall-summary">
+              Autonomous multi-agent engineering sentinel & bootstrapper. Synchronizes specialized agent personas, curated skills, and universal doctrine across AI coding harnesses.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer" 
+               class="px-3.5 py-1.5 rounded bg-obsidian-850 hover:bg-obsidian-800 text-xs font-mono text-white hairline-border flex items-center gap-1.5 transition-colors">
+              <i data-lucide="github" class="w-3.5 h-3.5"></i>
+              <span>GitHub</span>
+            </a>
+            <a href="https://www.npmjs.com/package/heimdall-agent" target="_blank" rel="noopener noreferrer" 
+               class="px-3.5 py-1.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-mono border border-amber-500/30 flex items-center gap-1.5 transition-colors">
+              <i data-lucide="box" class="w-3.5 h-3.5"></i>
+              <span>npm package</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Technical Capabilities -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="bg-obsidian-950/70 p-4 rounded hairline-border space-y-1.5">
+            <div class="text-amber-400 font-semibold flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+              <span data-i18n="h-cap1-title">Quality Gate Sentinel</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="h-cap1-desc">
+              Automated pre-commit hooks running 32 integrity suites. Enforces BLUF and Simplified Technical English (STE) communication doctrine.
+            </p>
+          </div>
+
+          <div class="bg-obsidian-950/70 p-4 rounded hairline-border space-y-1.5">
+            <div class="text-emerald-400 font-semibold flex items-center gap-1.5">
+              <i data-lucide="git-fork" class="w-3.5 h-3.5"></i>
+              <span data-i18n="h-cap2-title">Single Source of Truth</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="h-cap2-desc">
+              Live NTFS junctions keep 56 modular skills and 10 agent personas converged across Claude, Gemini/AGY, Codex, and Hermes simultaneously.
+            </p>
+          </div>
+
+          <div class="bg-obsidian-950/70 p-4 rounded hairline-border space-y-1.5">
+            <div class="text-cyan-400 font-semibold flex items-center gap-1.5">
+              <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+              <span data-i18n="h-cap3-title">Dynamic Context Discovery</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="h-cap3-desc">
+              Probes endpoints and configures maximum token context (1M+ tokens for Claude Opus 5.5 and Sonnet 5) with runtime payload sentinel hooks.
+            </p>
+          </div>
+        </div>
+
+        <!-- Command Execution Bar -->
+        <div class="bg-obsidian-950 rounded hairline-border p-3 flex items-center justify-between font-mono text-xs">
+          <div class="flex items-center gap-2 overflow-x-auto text-slate-300">
+            <span class="text-amber-400 select-none">$</span>
+            <span class="select-all">npx heimdall-agent sync</span>
+          </div>
+          <button onclick="copyCommand('npx heimdall-agent sync', this)" class="text-slate-400 hover:text-white px-2 py-1 rounded hairline-border bg-obsidian-850 transition-colors shrink-0">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+      </article>
+
+      <!-- Project 2: GC Helper -->
+      <article class="bg-obsidian-900 rounded-lg hairline-border p-6 sm:p-8 space-y-6 hover:border-slate-600/60 transition-all">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 hairline-b pb-6">
+          <div class="space-y-1">
+            <div class="flex items-center gap-3">
+              <h3 class="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">gc-helper</h3>
+              <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">v1.1.0</span>
+              <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-obsidian-800 text-slate-300 hairline-border">zero-dep</span>
+            </div>
+            <p class="text-sm text-slate-300 font-sans" data-i18n="gc-summary">
+              Zero-dependency auto-configurator, connection auditor, and status management hub for AI coding assistants connecting to GhostCLI and local LLM endpoints.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer" 
+               class="px-3.5 py-1.5 rounded bg-obsidian-850 hover:bg-obsidian-800 text-xs font-mono text-white hairline-border flex items-center gap-1.5 transition-colors">
+              <i data-lucide="github" class="w-3.5 h-3.5"></i>
+              <span>GitHub</span>
+            </a>
+            <a href="https://github.com/bepaldes/gc-helper#readme" target="_blank" rel="noopener noreferrer" 
+               class="px-3.5 py-1.5 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-mono border border-emerald-500/30 flex items-center gap-1.5 transition-colors">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <span>Documentation</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Technical Capabilities -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="bg-obsidian-950/70 p-4 rounded hairline-border space-y-1.5">
+            <div class="text-emerald-400 font-semibold flex items-center gap-1.5">
+              <i data-lucide="radar" class="w-3.5 h-3.5"></i>
+              <span data-i18n="gc-cap1-title">Harness Auto-Detection</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="gc-cap1-desc">
+              Inspects Claude Code, Codex, Hermes, OpenClaw, and VS Code configs with zero manual configuration.
+            </p>
+          </div>
+
+          <div class="bg-obsidian-950/70 p-4 rounded hairline-border space-y-1.5">
+            <div class="text-amber-400 font-semibold flex items-center gap-1.5">
+              <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+              <span data-i18n="gc-cap2-title">Live Health Probe</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="gc-cap2-desc">
+              Pings proxy endpoints, filters non-responsive models, and guarantees zero latency surprises.
+            </p>
+          </div>
+
+          <div class="bg-obsidian-950/70 p-4 rounded hairline-border space-y-1.5">
+            <div class="text-cyan-400 font-semibold flex items-center gap-1.5">
+              <i data-lucide="feather" class="w-3.5 h-3.5"></i>
+              <span data-i18n="gc-cap3-title">Zero Dependency</span>
+            </div>
+            <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="gc-cap3-desc">
+              Pure Node.js standard library with zero npm dependencies. Audits without supply chain footprint.
+            </p>
+          </div>
+        </div>
+
+        <!-- Command Execution Bar -->
+        <div class="bg-obsidian-950 rounded hairline-border p-3 flex items-center justify-between font-mono text-xs">
+          <div class="flex items-center gap-2 overflow-x-auto text-slate-300">
+            <span class="text-emerald-400 select-none">$</span>
+            <span class="select-all">npx gc-helper status</span>
+          </div>
+          <button onclick="copyCommand('npx gc-helper status', this)" class="text-slate-400 hover:text-white px-2 py-1 rounded hairline-border bg-obsidian-850 transition-colors shrink-0">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- Engineering Principles / Colophon -->
+    <section class="hairline-t pt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-xs font-mono">
+      <div class="space-y-2">
+        <div class="text-white font-bold uppercase tracking-wider" data-i18n="p1-title">01 / Non-Interactive Harness</div>
+        <p class="text-slate-400 leading-relaxed font-sans" data-i18n="p1-desc">
+          Strict zero dev-server policy. All verification runs through terminating unit tests, static typechecks, and production builds.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <div class="text-white font-bold uppercase tracking-wider" data-i18n="p2-title">02 / Karpathy Simplicity</div>
+        <p class="text-slate-400 leading-relaxed font-sans" data-i18n="p2-desc">
+          Surgical, minimal edits. Avoid neighboring code churn and subagent sprawl unless explicit fan-out is needed.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <div class="text-white font-bold uppercase tracking-wider" data-i18n="p3-title">03 / Single-Writer Steward</div>
+        <p class="text-slate-400 leading-relaxed font-sans" data-i18n="p3-desc">
+          Agents write to task-scoped scratchpads. Only the lead orchestrator or human merge gate commits to the shared tree.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean Editorial Footer -->
+  <footer class="bg-obsidian-950 hairline-t py-8">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-400">
+      <div>
+        &copy; <span id="year">2026</span> Bernardo Paldes &bull; MIT License
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/bepaldes" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">GitHub</a>
+        <span>&bull;</span>
+        <a href="https://github.com/bepaldes/heimdall-agent" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">heimdall-agent</a>
+        <span>&bull;</span>
+        <a href="https://github.com/bepaldes/gc-helper" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">gc-helper</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    lucide.createIcons();
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Tab Switcher
+    function switchTerminal(tab) {
+      const tabs = ['audit', 'status', 'doctrine'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const pane = document.getElementById(`pane-${t}`);
+        if (t === tab) {
+          btn.className = "px-2 py-0.5 rounded bg-obsidian-700 text-white font-medium transition-colors";
+          pane.classList.remove('hidden');
+        } else {
+          btn.className = "px-2 py-0.5 rounded text-slate-400 hover:text-white transition-colors";
+          pane.classList.add('hidden');
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // Copy Command
+    function copyCommand(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = button.innerHTML;
+        button.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 inline"></i>';
+        lucide.createIcons();
+        setTimeout(() => {
+          button.innerHTML = original;
+          lucide.createIcons();
+        }, 1800);
+      });
+    }
+
+    // Translations Dictionary
+    const translations = {
+      en: {
+        "hero-tag": "Engineering Doctrine & Runtime Sentinel",
+        "hero-title": "Deterministic sentinels and universal doctrine for AI coding assistants.",
+        "hero-desc": "Building high-resilience bridges, model-agnostic execution guardrails, and dynamic context discovery for production developer harnesses. Zero dev-server sprawl, single-writer memory discipline, and surgical Karpathy simplicity.",
+        "metric-skills": "Curated Skills",
+        "metric-suites": "Specialized Suites",
+        "metric-runtimes": "Active Harnesses",
+        "env-label": "Synchronized Runtimes:",
+        "projects-label": "Work & Artifacts",
+        "projects-heading": "Core Open Source Projects",
+        "projects-sub": "Published to npm and GitHub under MIT License",
+        "heimdall-summary": "Autonomous multi-agent engineering sentinel & bootstrapper. Synchronizes specialized agent personas, curated skills, and universal doctrine across AI coding harnesses.",
+        "h-cap1-title": "Quality Gate Sentinel",
+        "h-cap1-desc": "Automated pre-commit hooks running 32 integrity suites. Enforces BLUF and Simplified Technical English (STE) communication doctrine.",
+        "h-cap2-title": "Single Source of Truth",
+        "h-cap2-desc": "Live NTFS junctions keep 56 modular skills and 10 agent personas converged across Claude, Gemini/AGY, Codex, and Hermes simultaneously.",
+        "h-cap3-title": "Dynamic Context Discovery",
+        "h-cap3-desc": "Probes endpoints and configures maximum token context (1M+ tokens for Claude Opus 5.5 and Sonnet 5) with runtime payload sentinel hooks.",
+        "gc-summary": "Zero-dependency auto-configurator, connection auditor, and status management hub for AI coding assistants connecting to GhostCLI and local LLM endpoints.",
+        "gc-cap1-title": "Harness Auto-Detection",
+        "gc-cap1-desc": "Inspects Claude Code, Codex, Hermes, OpenClaw, and VS Code configs with zero manual configuration.",
+        "gc-cap2-title": "Live Health Probe",
+        "gc-cap2-desc": "Pings proxy endpoints, filters non-responsive models, and guarantees zero latency surprises.",
+        "gc-cap3-title": "Zero Dependency",
+        "gc-cap3-desc": "Pure Node.js standard library with zero npm dependencies. Audits without supply chain footprint.",
+        "p1-title": "01 / Non-Interactive Harness",
+        "p1-desc": "Strict zero dev-server policy. All verification runs through terminating unit tests, static typechecks, and production builds.",
+        "p2-title": "02 / Karpathy Simplicity",
+        "p2-desc": "Surgical, minimal edits. Avoid neighboring code churn and subagent sprawl unless explicit fan-out is needed.",
+        "p3-title": "03 / Single-Writer Steward",
+        "p3-desc": "Agents write to task-scoped scratchpads. Only the lead orchestrator or human merge gate commits to the shared tree."
+      },
+      pt: {
+        "hero-tag": "Doutrina de Engenharia & Sentinela de Runtimes",
+        "hero-title": "Sentinelas determinísticos e doutrina universal para assistentes de código com IA.",
+        "hero-desc": "Construindo pontes de alta resiliência, diretrizes de execução agnósticas de modelo e descoberta dinâmica de contexto para harnesses de desenvolvimento. Zero proliferação de dev servers, disciplina de escritor único e simplicidade cirúrgica Karpathy.",
+        "metric-skills": "Habilidades Curadas",
+        "metric-suites": "Suítes Especializadas",
+        "metric-runtimes": "Harnesses Ativos",
+        "env-label": "Runtimes Sincronizados:",
+        "projects-label": "Trabalho & Artefatos",
+        "projects-heading": "Projetos de Código Aberto",
+        "projects-sub": "Publicados no npm e GitHub sob licença MIT",
+        "heimdall-summary": "Sentinela de engenharia multi-agente e inicializador autônomo. Sincroniza personas especializadas, habilidades curadas e doutrina universal entre ambientes de IA.",
+        "h-cap1-title": "Sentinela de Portão de Qualidade",
+        "h-cap1-desc": "Hooks automatizados de pré-commit executando 32 suítes de integridade. Garante doutrina de comunicação BLUF e Inglês Técnico Simplificado (STE).",
+        "h-cap2-title": "Fonte Única da Verdade",
+        "h-cap2-desc": "Junções NTFS mantêm 56 habilidades e 10 personas sincronizadas no Claude, Gemini/AGY, Codex e Hermes simultaneamente.",
+        "h-cap3-title": "Descoberta de Contexto Dinâmico",
+        "h-cap3-desc": "Sonda endpoints e configura contexto máximo (1M+ tokens para Claude Opus 5.5 e Sonnet 5) com sentinelas de ciclo de vida em tempo real.",
+        "gc-summary": "Configurador sem dependências, auditor de conexão e hub de gerenciamento de status para assistentes de IA conectados ao GhostCLI e endpoints locais.",
+        "gc-cap1-title": "Detecção Automática",
+        "gc-cap1-desc": "Inspeciona configurações de Claude Code, Codex, Hermes, OpenClaw e VS Code sem configuração manual.",
+        "gc-cap2-title": "Sonda de Saúde em Tempo Real",
+        "gc-cap2-desc": "Testa endpoints de proxy, filtra modelos inativos e elimina surpresas de latência.",
+        "gc-cap3-title": "Zero Dependências",
+        "gc-cap3-desc": "Biblioteca padrão pura do Node.js sem pacotes npm. Audita sem impacto na cadeia de suprimentos.",
+        "p1-title": "01 / Harness Não-Interativo",
+        "p1-desc": "Política estrita contra dev servers. Toda verificação ocorre via testes unitários terminativos, checagens estáticas e builds.",
+        "p2-title": "02 / Simplicidade Karpathy",
+        "p2-desc": "Edições mínimas e cirúrgicas. Evite alterações desnecessárias em código vizinho e proliferação de subagentes.",
+        "p3-title": "03 / Escritor Único de Memória",
+        "p3-desc": "Subagentes escrevem apenas em scratchpads de escopo limitado. Apenas o orquestrador principal consolida na árvore compartilhada."
+      }
+    };
+
+    function setLanguage(lang) {
+      const selected = translations[lang] ? lang : 'en';
+      document.documentElement.setAttribute('lang', selected === 'pt' ? 'pt-BR' : 'en');
+      
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[selected][key]) {
+          el.innerHTML = translations[selected][key];
+        }
+      });
+
+      const btnEn = document.getElementById('lang-en');
+      const btnPt = document.getElementById('lang-pt');
+
+      if (selected === 'en') {
+        btnEn.className = "px-2.5 py-1 rounded text-[11px] font-semibold text-white bg-obsidian-700 transition-colors";
+        btnPt.className = "px-2.5 py-1 rounded text-[11px] hover:text-white transition-colors";
+      } else {
+        btnPt.className = "px-2.5 py-1 rounded text-[11px] font-semibold text-white bg-obsidian-700 transition-colors";
+        btnEn.className = "px-2.5 py-1 rounded text-[11px] hover:text-white transition-colors";
+      }
+    }
+  </script>
+</body>
+</html>
